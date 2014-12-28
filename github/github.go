@@ -1,8 +1,8 @@
 package github
 
 import (
-	"github.com/google/go-github/github"
 	"code.google.com/p/goauth2/oauth"
+	"github.com/google/go-github/github"
 )
 
 func NewGitHubClient(accessToken string) *github.Client {

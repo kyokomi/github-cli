@@ -9,15 +9,15 @@ import (
 const configFileName = "config.json"
 
 type AccessConfig struct {
-//	Host    string `json:"host"`
-//	ApiPath string `json:"api_path"`
-	Token   string `json:"token"`
+	//	Host    string `json:"host"`
+	//	ApiPath string `json:"api_path"`
+	Token string `json:"token"`
 }
 
 var defaultConfig = AccessConfig{
-//	Host:    "https://gitlab.com/",
-//	ApiPath: "api/v3/",
-	Token:   "aaaaaaaaaaaaaaaaaaaaaaa",
+	//	Host:    "https://gitlab.com/",
+	//	ApiPath: "api/v3/",
+	Token: "aaaaaaaaaaaaaaaaaaaaaaa",
 }
 
 type CliAppConfig struct {
@@ -27,7 +27,7 @@ type CliAppConfig struct {
 
 func NewCliAppConfig(appName string) *CliAppConfig {
 	return &CliAppConfig{
-		AppConfig: *appConfig.NewAppConfig(appName, configFileName),
+		AppConfig:    *appConfig.NewAppConfig(appName, configFileName),
 		AccessConfig: defaultConfig,
 	}
 }
@@ -45,7 +45,6 @@ func (a *CliAppConfig) ReadAccessTokenJson() error {
 
 	return nil
 }
-
 
 func (a CliAppConfig) WriteDefaultAccessConfig() error {
 	return a.WriteAccessConfig(&defaultConfig)

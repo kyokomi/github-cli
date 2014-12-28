@@ -3,13 +3,16 @@ package main
 import (
 	"os"
 
+	"log"
+
 	"github.com/codegangsta/cli"
 	"github.com/kyokomi/github-cli/config"
-	"log"
 	. "github.com/kyokomi/github-cli/github"
 
-	"github.com/google/go-github/github"
 	"fmt"
+
+	"github.com/google/go-github/github"
+	gitconfig "github.com/tcnksm/go-gitconfig"
 )
 
 var gitHubAppConfig *config.CliAppConfig
@@ -49,43 +52,46 @@ func doGistList(c *cli.Context) {
 		log.Fatalln("error read accessToken ", err)
 	}
 
-	client := NewGitHubClient(gitHubAppConfig.AccessConfig.Token)
-//	gitLab, err := newGitLabCli(c.GlobalBool("skip-cert-check"))
-//	if err != nil {
-//		log.Fatal("error create gitlab ")
-//	}
-
-//	projectName, err := git.GetCurrentDirProjectName()
-//	if err != nil {
-//		log.Fatal("not gitlab projectName ", err)
-//	}
-
-	opt := &github.GistListOptions{}
-	gists, _, err := client.Gists.ListAll(opt)
+	name, err := gitconfig.Username()
 	if err != nil {
-		log.Fatalln("error read gists ", err)
+		log.Fatalln("error username ", err)
+	}
+
+	client := NewGitHubClient(gitHubAppConfig.AccessConfig.Token)
+
+	gistList(name, client, github.GistListOptions{})
+}
+
+func gistList(name string, client *github.Client, opt github.GistListOptions) error {
+	gists, res, err := client.Gists.List(name, &opt)
+	if err != nil {
+		return err
 	}
 
 	for _, gist := range gists {
-		fmt.Println(gist.String())
+		fmt.Println(*gist.HTMLURL, *gist.Description)
 	}
 
-//	projectID, err := gitLab.GetProjectID(projectName)
-//	if err != nil {
-//		log.Fatal("not gitlab projectID ", err)
-//	}
-//
-//	gitLab.PrintIssue(projectID, c.String("state"))
+	fmt.Println("NextPage = ", res.NextPage)
+	if res.NextPage <= res.PrevPage {
+		return nil
+	}
+
+	opt.ListOptions.Page = res.NextPage
+	return gistList(name, client, opt)
 }
 
 func doInitConfig(c *cli.Context) {
 
 	token := c.String("token")
 
-	config := config.AccessConfig{
-		Token:   token,
+	access := config.AccessConfig{
+		Token: token,
 	}
-	if err := gitHubAppConfig.WriteAccessConfig(&config); err != nil {
+	if err := gitHubAppConfig.WriteAccessConfig(&access); err != nil {
 		log.Fatal("appConfig write error ", err)
+	} else {
+		fmt.Println("create config successfull ",
+			gitHubAppConfig.ConfigDirPath+"/"+gitHubAppConfig.ConfigFileName)
 	}
 }
