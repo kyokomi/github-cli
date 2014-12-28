@@ -5,6 +5,7 @@ github command line tool golang
 
 ## Install ##
 
+TODO: 作成中
 
 ## Usage ##
 
@@ -18,31 +19,15 @@ $ github-cli init --host https://github.com/ --api-path api/v3/ --token aaaaaaaa
 - `--api-path`: github api version path
 - `--token`: your access token
 
-### Issue List
+TODO: 作成中
 
-```
-$ github-cli list
-```
+## TODO:
 
-- `--state`: state filter (`opened` or `closed`)
-
-### Create Issue
-
-```
-$ github-cli add -t title -d hoge -l aaa,bbbb,hoge,tag
-```
-
-- `-t`: issue title
-- `-d`: issue detail
-- `-l`: issue labels (array of a comma delimited string)
-
-### Issue Detail
-
-```
-$ github-cli issue --id 28
-```
-
-- `--issue-id, --id`: issue localID
+- [ ] gist一覧表示
+- [ ] project issue一覧表示
+- [ ] project issue詳細表示
+- [ ] project issue登録
+- [ ] project issue編集
 
 ## LICENSE
 
