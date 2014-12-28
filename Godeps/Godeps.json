@@ -23,6 +23,11 @@
 		{
 			"ImportPath": "github.com/kyokomi/appConfig",
 			"Rev": "721c6c5622322a47ee5a680b42d2aba0a2db2e3b"
+		},
+		{
+			"ImportPath": "github.com/tcnksm/go-gitconfig",
+			"Comment": "v0.1.1-4-gd68ae37",
+			"Rev": "d68ae37c70a6a071febe91c2171e4784d03e4ea1"
 		}
 	]
 }
