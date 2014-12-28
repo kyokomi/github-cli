@@ -12,11 +12,9 @@ TODO: 作成中
 ### Init Config
 
 ```
-$ github-cli init --host https://github.com/ --api-path api/v3/ --token aaaaaaaaaaa
+$ github-cli init --token aaaaaaaaaaa
 ```
 
-- `--host`: github host url
-- `--api-path`: github api version path
 - `--token`: your access token
 
 TODO: 作成中
