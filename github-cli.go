@@ -47,7 +47,7 @@ func main() {
 	app.Run(os.Args)
 }
 
-func doGistList(c *cli.Context) {
+func doGistList(_ *cli.Context) {
 	if err := gitHubAppConfig.ReadAccessTokenJson(); err != nil {
 		log.Fatalln("error read accessToken ", err)
 	}
@@ -59,17 +59,21 @@ func doGistList(c *cli.Context) {
 
 	client := NewGitHubClient(gitHubAppConfig.AccessConfig.Token)
 
-	gistList(name, client, github.GistListOptions{})
+	printGistList(name, client, github.GistListOptions{})
 }
 
-func gistList(name string, client *github.Client, opt github.GistListOptions) error {
+func printGistList(name string, client *github.Client, opt github.GistListOptions) error {
 	gists, res, err := client.Gists.List(name, &opt)
 	if err != nil {
 		return err
 	}
 
 	for _, gist := range gists {
-		fmt.Println(*gist.HTMLURL, *gist.Description)
+		pub := "private"
+		if *gist.Public {
+			pub = "public"
+		}
+		fmt.Println(*gist.CreatedAt, *gist.UpdatedAt, *gist.HTMLURL, pub, *gist.Description)
 	}
 
 	fmt.Println("NextPage = ", res.NextPage)
@@ -78,7 +82,8 @@ func gistList(name string, client *github.Client, opt github.GistListOptions) er
 	}
 
 	opt.ListOptions.Page = res.NextPage
-	return gistList(name, client, opt)
+	// 次ページがあれば再帰
+	return printGistList(name, client, opt)
 }
 
 func doInitConfig(c *cli.Context) {
